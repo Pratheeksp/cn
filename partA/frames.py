@@ -1,32 +1,42 @@
 import random
 
-# Sorting the Frames
-def sortFrame( frame ):
-    frame.sort()
-    return frame
+class Frame:
+    def __init__(self, seqNo, data = None):
+        self.seqNo = seqNo
+        self.data = data
 
-def main():
-    frame = list([])
-    print("Enter the number of Frames >> ")
-    n = int(input())
+def bubbleSort(frames):
+    for i in range(len(frames)):
+        flag = 0
+        for j in range(len(frames)-i-1):
+            if(frames[j].seqNo > frames[j+1].seqNo):
+                temp = frames[j]
+                frames[j] = frames[j+1]
+                frames[j+1] = temp
+                flag = 1
+        if(flag == 0):
+            break
 
-    for i in range(n):
-        seqNum = random.randint(1, 10000)
-        print(f'Enter the data for {i+1}th frame >> ')
-        data = int(input())
+n = int(input("Enter no of frames : "))
 
-        frame.append([seqNum, data])    
+seqList = []
+for _ in range(n):
+    r = random.randint(1, n*100)
+    while r in seqList:
+        r = random.randint(1, n*100)
+    seqList.append(r)
 
-    print("\n\nBefore Sorting >> ")
-    for i in frame:
-        print(f'Seq. Num -> {i[0]}, Data -> {i[1]}')
-    
-    frame = sortFrame(frame)
+frames = []
+for i in range(n):
+    ch = random.choice(seqList)
+    frames.append(Frame(ch))
+    seqList.remove(ch)
 
-    print("\n\nAfter Sorting >> ")
-    for i in frame:
-        print(f'Seq. Num -> {i[0]}, Data -> {i[1]}')
+for i in range(n):
+    frames[i].data = input(f"Enter data of frame with seqNo {frames[i].seqNo} : ")
 
+bubbleSort(frames)
 
-if __name__ == "__main__":
-    main()
+print("Sorted Frames")
+for i in range(n):
+    print(f"{frames[i].seqNo} : {frames[i].data}")

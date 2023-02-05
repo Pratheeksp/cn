@@ -1,41 +1,42 @@
-class Graph():
-    def __init__(self, vertices):
-        self.V = vertices
+import maxsize
+
+class Graph:
+    def __init__(self, v):
+        self.V = v 
         self.graph = []
-
-    def addEdge(self, u, v, w):
-        self.graph.append([u, v, w])
-
-    def printAns(self, dis):
-        print("Vertex\t\tDistance from Source >> ")
-
-        for i in range(self.V):
-            print(f'{i}\t\t\t{dis[i]}')
-
+    
+    def addEdge(self, u, v, wt):
+        self.graph.append([u, v, wt])
+    
     def bellmanFord(self, src):
-        dis = [float('Inf')] * self.V
-        dis[src] = 0
+        dist = [maxsize] * self.V # Array of size V in which all elements are initialized to maxsize
+        dist[src] = 0
 
-        for _ in range(self.V - 1):
-            for u, v, w in self.graph:
-                if dis[v] > w + dis[u] and dis[u]!='Inf':
-                    dis[v] = w + dis[u]
+        #Relaxing all edges V-1 times
+        for _ in range(self.V-1):
+            for u, v, wt in self.graph:
+                if(dist[u] != maxsize and dist[u] + wt < dist[v]):
+                    dist[v] = dist[u] + wt
 
-        self.printAns(dis)
+         #Relaxing one more time to detect if negative weghted cycle exists
+        for u, v, wt in self.graph:
+            if(dist[u] != maxsize and dist[u] + wt < dist[v]):
+                print("The graph contains negative weighted cycle")
+                return
 
-def main():
-    g = Graph(5)
-    # Graph must not contain negative weight cycle
-    g.addEdge(0, 1, -1)
-    g.addEdge(0, 2, 4)
-    g.addEdge(1, 2, 3)
-    g.addEdge(1, 3, 2)
-    g.addEdge(1, 4, 2)
-    g.addEdge(3, 2, 5)
-    g.addEdge(3, 1, 1)
-    g.addEdge(4, 3, -3)
- 
-    g.bellmanFord(0)
+        print("\n___Dist of all nodes from source___")
+        for i in range(self.V):
+            print(f"Dist of {i} from src : {dist[i]}")
 
-if __name__ == '__main__':
-    main()
+
+v = int(input("Enter no of vertices : "))
+e = int(input("Ennter no of edges : "))
+
+graph = Graph(v)
+print("Enter src dest and weight of edges")
+for _ in range(e):
+    u, v, wt = map(int, input().split())
+    graph.addEdge(u, v, wt)
+
+source = int(input("Enter source node : "))
+graph.bellmanFord(source)
