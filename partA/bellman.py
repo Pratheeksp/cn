@@ -1,4 +1,4 @@
-import maxsize
+from sys import maxsize
 
 class Graph:
     def __init__(self, v):
